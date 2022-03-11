@@ -5,13 +5,18 @@ const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
+const koaBody = require('koa-body');
+
 
 const routes = require('./routes')
+const errorMiddlewares = require('./middlewares/error')
+
 
 // error handler
 onerror(app)
 
 // middlewares
+app.use(errorMiddlewares)
 app.use(bodyparser({
   enableTypes: ['json', 'form', 'text']
 }))
@@ -22,6 +27,13 @@ app.use(require('koa-static')(__dirname + '/public'))
 app.use(views(__dirname + '/views', {
   extension: 'ejs'
 }))
+
+app.use(koaBody({
+  multipart: true,
+  formidable: {
+    maxFileSize: 200 * 1024 * 1024    // 设置上传文件大小最大限制，默认2M
+  }
+}));
 
 // logger
 app.use(async (ctx, next) => {
