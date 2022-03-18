@@ -14,7 +14,7 @@ module.exports = {
     // 可读流通过管道写入可写流
     reader.pipe(upStream);
 
-    return { success: '上传成功' }
+    return { success: '上传成功', path: '/upload' + `/${file.name}` }
   }
 
 }
